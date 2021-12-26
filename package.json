@@ -1,6 +1,6 @@
 {
   "name": "react-extension-boilerplate",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Modern React boilerplate for Firefox and Chrome extensions",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -30,12 +30,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kryptokinght/react-extension-boilerplate.git"
+    "url": "https://github.com/yhk1038/react-extension-boilerplate.git"
   },
   "author": "Minanshu Singh <minanshu.1998@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kryptokinght/react-extension-boilerplate/issues"
+    "url": "https://github.com/yhk1038/react-extension-boilerplate/issues"
   },
   "dependencies": {
     "@babel/core": "^7.2.2",

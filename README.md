@@ -29,7 +29,8 @@ Make changes to the source code and watch the extension implement these changes 
 <br/> 
 Implements all the best Javascript practises with ESLint, Jest, React-StoryBook, Webpack and lots more. 
 
-* Source: [https://github.com/kryptokinght/react-extension-boilerplate](https://github.com/kryptokinght/react-extension-boilerplate)
+* Source: [[upstream] https://github.com/kryptokinght/react-extension-boilerplate](https://github.com/kryptokinght/react-extension-boilerplate)
+* Source: [[origin] https://github.com/yhk1038/react-extension-boilerplate](https://github.com/kryptokinght/react-extension-boilerplate)
 
 
 ## Installation :checkered_flag:
@@ -43,7 +44,7 @@ Installing this boilerplate is as simple as cloning this repo in a new folder an
 $ git clone https://github.com/kryptokinght/react-extension-boilerplate.git
 
 # Install dependencies
-$ npm install
+$ yarn install
 ```
 
 ## Development :computer:
@@ -52,16 +53,16 @@ $ npm install
 ```bash
 # build files to './dev' 
 # and launches the web ext in a new chrome instance, watches for changes and updates
-$ npm run start:chrome
+$ yarn start:chrome
 # launches in firefox
-$ npm run start:firefox
+$ yarn start:firefox
 # runs storybook
-$ npm run storybook
+$ yarn storybook
 ```
-*`npm run chrome-launch` in action:*
+*`yarn chrome-launch` in action:*
 ![dev gif](screenshots/ext_boiler.gif)
 
-* If you want to load your unpacked extension by yourself, then run `npm run dev`. This will create the extension inside an **dev** folder in `development` mode and will watch the `src` folder for changes.   
+* If you want to load your unpacked extension by yourself, then run `yarn dev`. This will create the extension inside an **dev** folder in `development` mode and will watch the `src` folder for changes.   
 * [Load unpacked extensions](https://developer.chrome.com/extensions/getstarted#unpacked) with `./dev` folder. Though you have to reload the extension by yourself every time the `./dev` folder updates.
 
 *Screenshot of the development folder:*
@@ -105,7 +106,7 @@ If you need any further help regarding feel free to ask on our [Gitter community
 
 ```bash
 # build files to './extension'
-$ npm run build
+$ yarn build
 ```
 *Once created here's what the extension folder looks like:*
 <br/>
@@ -116,8 +117,8 @@ $ npm run build
 
 ```bash
 # compress build folder to {manifest.name}.zip and crx
-$ npm run build
-$ npm run compress -- [options]
+$ yarn build
+$ yarn compress -- [options]
 ```
 
 #### Options
@@ -126,7 +127,7 @@ If you want to build `crx` file (auto update), please provide options, and add `
 
 * --app-id: your extension id (can be get it when you first release extension)
 * --key: your private key path (default: './key.pem')  
-  you can use `npm run compress-keygen` to generate private key `./key.pem`
+  you can use `yarn compress-keygen` to generate private key `./key.pem`
 * --codebase: your `crx` file url
 
 See [autoupdate guide](https://developer.chrome.com/extensions/autoupdate) for more information.
