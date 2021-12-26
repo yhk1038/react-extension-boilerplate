@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
 
+const appList = require('./appList');
 const paths = require('../paths');
 const initLoaders = require('./loaders');
 const initPlugins = require('./plugins');
@@ -9,15 +10,22 @@ require('../env');
 
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 const useTypeScript = fs.existsSync(paths.appTsConfig);
-
-const doesOptionsExist = fs.existsSync(paths.appOptionsJs);
-const doesOptionsHtmlExist = fs.existsSync(paths.optionsTemplate);
-const doesPopupExist = fs.existsSync(paths.appPopupJs);
-const doesPopupHtmlExist = fs.existsSync(paths.popupTemplate);
-const doesSidebarExist = fs.existsSync(paths.appSidebarJs);
-const doesSidebarHtmlExist = fs.existsSync(paths.sidebarTemplate);
 const doesBackgroundExist = fs.existsSync(paths.appBackgroundJs);
 const doesContentExist = fs.existsSync(paths.appContentJs);
+
+const appEntries = appList.map((app) => {
+  const modulePathName = `app${app.name}Js`;
+  const doesModuleExist = fs.existsSync(paths[modulePathName]);
+  const entry = {};
+  entry[app.filename] = paths[modulePathName];
+
+  return doesModuleExist && entry;
+});
+
+const appPlugins = (plugins) => appList.map((app) => {
+  const doesHtmlExist = fs.existsSync(paths[`${app.camelcase}Template`]);
+  return doesHtmlExist && plugins[`${app.camelcase}HtmlPlugin`];
+});
 
 
 
@@ -35,11 +43,9 @@ module.exports = function (webpackEnv) {
 
   // named entry cannot be stored in an array and has to be stored inside an object
   const entryArray = [
+    ...appEntries,
     doesBackgroundExist && { 'background': paths.appBackgroundJs },
-    doesPopupExist && { 'popup': paths.appPopupJs },
     doesContentExist && { 'content': paths.appContentJs },
-    doesSidebarExist && { 'sidebar': paths.appSidebarJs },
-    doesOptionsExist && { 'options': paths.appOptionsJs },
   ].filter(Boolean);
 
   const entry = {};
@@ -110,9 +116,7 @@ module.exports = function (webpackEnv) {
     },
     plugins: [
       plugins.friendlyErrorsWebpackPlugin,
-      doesOptionsHtmlExist && plugins.optionsHtmlPlugin,
-      doesPopupHtmlExist && plugins.popupHtmlPlugin,
-      doesSidebarHtmlExist && plugins.sidebarHtmlPlugin,
+      ...appPlugins(plugins),
       plugins.htmlIncAssetsPlugin,
       plugins.moduleNotFoundPlugin,
       isEnvDevelopment && plugins.CaseSensitivePathsPlugin,

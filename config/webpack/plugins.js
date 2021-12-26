@@ -14,6 +14,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 const paths = require('../paths');
 const staticFiles = require('./static-files');
+const appList = require('./appList');
 
 const minifyHtml = {
   removeComments: true,
@@ -30,57 +31,25 @@ const minifyHtml = {
 
 
 const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
-  /* HTML Plugins for options, sidebar, options */
-  const optionsHtmlPlugin = new HtmlWebpackPlugin(
-    Object.assign(
-      {},
-      {
-        title: 'Options',
-        chunks: ['options'],
-        filename: 'options.html',
-        template: paths.optionsTemplate,
-      },
-      isEnvProduction
-        ? {
-          minify: minifyHtml,
-        }
-        : undefined
-    )
-  );
-
-  const popupHtmlPlugin = new HtmlWebpackPlugin(
-    Object.assign(
-      {},
-      {
-        title: 'Popup',
-        chunks: ['popup'],
-        filename: 'popup.html',
-        template: paths.popupTemplate,
-      },
-      isEnvProduction
-        ? {
-          minify: minifyHtml,
-        }
-        : undefined
-    )
-  );
-
-  const sidebarHtmlPlugin = new HtmlWebpackPlugin(
-    Object.assign(
-      {},
-      {
-        title: 'Sidebar',
-        chunks: ['sidebar'],
-        filename: 'sidebar.html',
-        template: paths.sidebarTemplate,
-      },
-      isEnvProduction
-        ? {
-          minify: minifyHtml,
-        }
-        : undefined
-    )
-  );
+  const appHtmlPlugins = {};
+  appList.forEach((app) => {
+    appHtmlPlugins[`${app.camelcase}HtmlPlugin`] = new HtmlWebpackPlugin(
+      Object.assign(
+        {},
+        {
+          title: app.name,
+          chunks: [app.filename],
+          filename: `${app.filename}.html`,
+          template: paths[`${app.camelcase}Template`],
+        },
+        isEnvProduction
+          ? {
+            minify: minifyHtml,
+          }
+          : undefined
+      )
+    );
+  });
 
   const moduleNotFoundPlugin = new ModuleNotFoundPlugin(paths.appPath);
   const caseSensitivePathsPlugin = new CaseSensitivePathsPlugin();
@@ -136,9 +105,8 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
   const friendlyErrorsWebpackPlugin = new FriendlyErrorsWebpackPlugin();
 
   return {
-    optionsHtmlPlugin,
-    popupHtmlPlugin,
-    sidebarHtmlPlugin,
+    ...appHtmlPlugins,
+
     moduleNotFoundPlugin,
     caseSensitivePathsPlugin,
     watchMissingNodeModulesPlugin,

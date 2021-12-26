@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const url = require('url');
+const appList = require('./webpack/appList');
 
 require('colors');
 
@@ -64,6 +65,12 @@ const resolveModule = (resolveFn, filePath) => {
   return resolveFn(`${filePath}.js`);
 };
 
+const appPaths = {};
+appList.forEach(app => {
+  appPaths[`${app.camelcase}Template`] = resolveApp(`src/${app.filename}/template.html`);
+  appPaths[`app${app.name}Js`] = resolveModule(resolveApp, `src/${app.filename}/index`);
+});
+
 module.exports = {
   dotenv: resolveApp('.env'),
   appPath: resolveApp('.'),
@@ -73,12 +80,9 @@ module.exports = {
   appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),
   appTemplate: resolveApp('config/template.html'),
-  optionsTemplate: resolveApp('src/options/template.html'),
-  sidebarTemplate: resolveApp('src/sidebar/template.html'),
-  popupTemplate: resolveApp('src/popup/template.html'),
-  appOptionsJs: resolveModule(resolveApp, 'src/options/index'),
-  appPopupJs: resolveModule(resolveApp, 'src/popup/index'),
-  appSidebarJs: resolveModule(resolveApp, 'src/sidebar/index'),
+
+  ...appPaths,
+
   appBackgroundJs: resolveModule(resolveApp, 'src/background/index'),
   appContentJs: resolveModule(resolveApp, 'src/content_scripts/index'),
   appPackageJson: resolveApp('package.json'),
